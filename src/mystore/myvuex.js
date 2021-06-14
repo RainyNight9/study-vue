@@ -19,6 +19,7 @@ class Store {
 
     // 定义computed选项
     const computed = {};
+    // getters
     this.getters = {};
     // {doubleCounter(state){}}
     const self = this
@@ -56,7 +57,6 @@ class Store {
     this.commit = this.commit.bind(this);
     // 实现dispatch()
     this.dispatch = this.dispatch.bind(this);
-    // getters
 
     // 绑定commit上下⽂否则action中调⽤commit时可能出问题!!
     // 同时也把action绑了，因为action可以互调
