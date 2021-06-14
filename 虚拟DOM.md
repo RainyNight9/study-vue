@@ -1,11 +1,10 @@
-### 虚拟DOM
+# 虚拟DOM
 
 虚拟DOM（Virtual DOM）是对DOM的JS抽象表示，它们是JS对象，能够描述DOM结构和关系。
 
-
 虚拟DOM流程
 
-##### mountComponent
+### mountComponent
 
 vdom树首页生成、渲染发生在mountComponent中，core/instance/lifecycle.js
 
