@@ -1,4 +1,5 @@
 export default {
+  name: 'RouterView',
   render(h) {
     // 标记当前router-view深度
     this.$vnode.data.routerView = true;
@@ -13,13 +14,13 @@ export default {
       }
       parent = parent.$parent;
     }
+
     // 获取path 对应的component
     let component = null;
     const route = this.$router.matched[depth];
     if (route) {
       component = route.component;
     }
-    console.log(111, component);
-    h(component);
+    return h(component);
   },
 };

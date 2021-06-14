@@ -6,7 +6,7 @@
 // 1.router-view：占位容器
 // 2.数据响应式：current变量持有url地址，⼀旦变化，动态重新执⾏render
 
-import View from "./my-router-view.js";
+import View from "./my-router-view";
 
 let Vue; // 引⽤构造函数，VueRouter中要使⽤
 
@@ -17,7 +17,7 @@ let Vue; // 引⽤构造函数，VueRouter中要使⽤
 // 响应这个变化
 class VueRouter {
   constructor(options) {
-    this.options = options; // 保存选项
+    this.$options = options; // 保存选项
 
     // 数据响应式，current必须是响应式的，这样他变化，使用它的组件就会重新render
     // 如何造一个响应式数据
@@ -57,7 +57,7 @@ class VueRouter {
   }
 
   match(routes) {
-    routes = routes || this.options.routes;
+    routes = routes || this.$options.routes;
 
     // 递归遍历
     for (const route of routes) {
@@ -67,12 +67,11 @@ class VueRouter {
       }
 
       // /about/info
-      if (route.path !== "/" && this.current.indexOf(route.path) !== -1) {
+      if (route.path !== "/" && this.current.indexOf(route.path) != -1) {
         this.matched.push(route);
         if (route.children) {
           this.match(route.children);
         }
-        console.log(2222, this.matched);
         return;
       }
     }
@@ -82,7 +81,7 @@ class VueRouter {
 // 插件要实现一个install方法
 // $router注册
 // 两个全局组件
-VueRouter.install = function(_Vue) {
+VueRouter.install = function (_Vue) {
   Vue = _Vue; // 引⽤构造函数，VueRouter中要使⽤
 
   // 注册router实例
@@ -115,14 +114,13 @@ VueRouter.install = function(_Vue) {
   //     // if (route) {
   //     //   component = route.component;
   //     // }
-  //     // console.log(current, options);
   //     // return h(component);
 
   //     // 提前处理路由表
   //     // 提前处理路由表避免每次都循环
-  //     // const { routeMap, current } = this.$router;
-  //     // const component = routeMap[current] ? routeMap[current].component : null;
-  //     // return h(component);
+  //     const { routeMap, current } = this.$router;
+  //     const component = routeMap[current] ? routeMap[current].component : null;
+  //     return h(component);
   //   },
   // });
   Vue.component("router-link", {

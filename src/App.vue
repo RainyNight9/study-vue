@@ -6,10 +6,15 @@
     </div>
     <p @click="$store.commit('add')">{{ $store.state.counter }}</p>
     <p @click="$store.dispatch('add')">async:{{ $store.state.counter }}</p>
-    <!-- <p>{{ $store.getters.doubleCounter }}</p> -->
-    <router-view />
+    <p>{{ $store.getters.doubleCounter }}</p>
+    <router-view></router-view>
   </div>
 </template>
+
+<script>
+export default {
+}
+</script>
 
 <style>
 #app {

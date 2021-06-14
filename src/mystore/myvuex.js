@@ -15,6 +15,26 @@ class Store {
     this._mutations = options.mutations;
     // 保存⽤户编写的actions选项
     this._actions = options.actions;
+    this._wrappedGetters = options.getters;
+
+    // 定义computed选项
+    const computed = {};
+    this.getters = {};
+    // {doubleCounter(state){}}
+    const self = this
+    Object.keys(this._wrappedGetters).forEach((key) => {
+      // 获取用户定义的getter
+      const fn = this._wrappedGetters[key];
+      // 转换为computed 可以使用无参数形式
+      computed[key] = () => {
+        return fn(this.state);
+      };
+      // 为getters 定义只读属性
+      Object.defineProperty(this.getters, key, {
+        get: () => self._vm[key],
+      });
+    });
+
     // 响应式处理的数据
     // this.state = new Vue({
     //   data: options.state
@@ -29,6 +49,7 @@ class Store {
         // 添加$$, Vue就不会代理
         $$state: options.state,
       },
+      computed
     });
 
     // 实现commit()
