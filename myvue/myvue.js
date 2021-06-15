@@ -1,3 +1,17 @@
+// 数组响应式
+// 1、替换数组原型中的 7个方法
+const orginalProto = Array.prototype
+// 备份一份，修改备份
+const arrayProto = Object.create(orginalProto);
+['push', 'pop', 'shift', 'unshift', 'splice', 'sort', 'reverse'].forEach(method => {
+  arrayProto[method] = function () {
+    // 原始操作
+    orginalProto[method].apply(this, arguments)
+    // 覆盖操作，通知更新
+    console.log('数组执行' + method + '操作')
+  }
+})
+
 // 给一个obj定义一个响应式的属性
 function defineReactive(obj, key, val) {
   // 递归
@@ -55,6 +69,13 @@ class Observer {
     // 判断传入obj类型，做相应处理
     if (Array.isArray(obj)) {
       // 数组todo
+      // 覆盖原型，替换7个变更操作
+      obj.__proto__ = arrayProto
+      // 对数组内部元素执行响应化
+      const keys = Object.keys(obj)
+      for (let i = 0; i < keys.length; i++) {
+        observe(obj[i])
+      }
     } else {
       this.walk(obj);
     }
@@ -65,7 +86,7 @@ class Observer {
   }
 }
 
-export class RVue {
+class RVue {
   constructor(options) {
     // 0.保存选项
     this.$options = options;
@@ -144,6 +165,15 @@ class Compile {
         const dir = attrName.substring(2);
         this[dir] && this[dir](n, exp);
       }
+
+      // 事件处理
+      if(this.isEvent(attrName)){
+        // @click="onclick"
+        // exp click
+        const dir = attrName.substring(1) // click
+        // 事件监听
+        this.eventhandler(n, exp, dir)
+      }
     });
   }
 
@@ -175,9 +205,35 @@ class Compile {
   htmlUpdater(node, val) {
     node.innerHTML = val;
   }
-  
+
+  // r-model
+  model(node, exp){
+    // 只完成赋值和更新
+    this.update(node, exp, "model")
+
+    // 事件监听
+    node.addEventListener('input', e=>{
+      // 新的值赋值给数据即可
+      this.$vm[exp] = e.target.value
+    })
+  }
+
+  modelUpdater(node, val) {
+    node.value = val;
+  }
+
   isDir(attrName) {
     return attrName.startsWith("r-");
+  }
+
+  isEvent(attrName){
+    return attrName.startsWith("@");
+  }
+
+  eventhandler(node, exp, dir){
+    // method: {onclick:function(){}}
+    const fn = this.$vm.$options.methods && this.$vm.$options.methods[exp]
+    node.addEventListener(dir, fn.bind(this.$vm))
   }
 }
 

@@ -5,10 +5,11 @@
   <p>{{counter}}</p>
   <p r-text="counter"></p>
   <p r-html="desc"></p>
-  <input type="text" k-model="desc">
+  <input type="text" r-model="desc">
 </div>
 
 <script src="./myvue.js"></script>
+
 <script>
   const app = new RVue({
     el: '#app',
