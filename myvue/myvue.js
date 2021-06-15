@@ -54,7 +54,7 @@ class Observer {
   constructor(obj) {
     // 判断传入obj类型，做相应处理
     if (Array.isArray(obj)) {
-      // todo
+      // 数组todo
     } else {
       this.walk(obj);
     }
@@ -65,7 +65,7 @@ class Observer {
   }
 }
 
-class KVue {
+export class RVue {
   constructor(options) {
     // 0.保存选项
     this.$options = options;
@@ -82,6 +82,7 @@ class KVue {
   }
 }
 
+// 编译
 class Compile {
   constructor(el, vm) {
     this.$vm = vm;
@@ -129,12 +130,12 @@ class Compile {
     this.update(n, RegExp.$1, "text");
   }
 
-  // 编译元素：遍历它的所有特性，看是否k-开头指令，或者@事件
+  // 编译元素：遍历它的所有特性，看是否r-开头指令，或者@事件
   compileElement(n) {
     const attrs = n.attributes;
     Array.from(attrs).forEach((attr) => {
-      // k-text="xxx"
-      // name = k-text,value = xxx
+      // r-text="xxx"
+      // name = r-text,value = xxx
       const attrName = attr.name;
       const exp = attr.value;
       // 指令
@@ -157,7 +158,7 @@ class Compile {
     })
   }
 
-  // k-text
+  // r-text
   text(node, exp) {
     this.update(node, exp, "text");
   }
@@ -166,7 +167,7 @@ class Compile {
     node.textContent = val;
   }
 
-  // k-html
+  // r-html
   html(node, exp) {
     this.update(node, exp, "html");
   }
@@ -176,7 +177,7 @@ class Compile {
   }
   
   isDir(attrName) {
-    return attrName.startsWith("k-");
+    return attrName.startsWith("r-");
   }
 }
 
